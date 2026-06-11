@@ -3,10 +3,10 @@ const db = require('../db');
 const list = async ({ q, page, limit }) => {
   const offset = (page - 1) * limit;
   if (q) {
-    const [rows] = await db.execute('SELECT * FROM customers WHERE full_name LIKE ? OR email LIKE ? LIMIT ? OFFSET ?', [`%${q}%`,`%${q}%`, limit, offset]);
+    const [rows] = await db.execute(`SELECT * FROM customers WHERE full_name LIKE ? OR email LIKE ? LIMIT ${limit} OFFSET ${offset}`, [`%${q}%`,`%${q}%`]);
     return { rows, page, limit };
   }
-  const [rows] = await db.execute('SELECT * FROM customers LIMIT ? OFFSET ?', [limit, offset]);
+  const [rows] = await db.execute(`SELECT * FROM customers LIMIT ${limit} OFFSET ${offset}`);
   return { rows, page, limit };
 };
 

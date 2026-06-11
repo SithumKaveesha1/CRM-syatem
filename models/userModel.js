@@ -5,8 +5,8 @@ const findByEmail = async (email) => {
   return rows[0] || null;
 };
 
-const create = async ({ name, email, password }) => {
-  const [result] = await db.execute('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password]);
+const create = async ({ name, email, password, role = 'staff' }) => {
+  const [result] = await db.execute('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)', [name, email, password, role]);
   return result.insertId;
 };
 

@@ -1,19 +1,37 @@
 const jwt = require('jsonwebtoken');
-const { sendError } = require('./errorHandler');
+const db = require('../db');
 
-const auth = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return sendError(res, 'Unauthorized', 401);
-  const parts = authHeader.split(' ');
-  if (parts.length !== 2) return sendError(res, 'Unauthorized', 401);
-  const token = parts[1];
-  try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    req.user = payload;
-    next();
-  } catch (err) {
-    return sendError(res, 'Invalid token', 401);
+const protect = async (req, res, next) => {
+  let token;
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      const [rows] = await db.query('SELECT user_id, name, email, role FROM users WHERE user_id = ?', [decoded.id]);
+      
+      if (rows.length === 0) {
+        return res.status(401).json({ success: false, message: 'Not authorized, user not found' });
+      }
+
+      req.user = rows[0];
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ success: false, message: 'Not authorized, token failed' });
+    }
+  } else {
+    res.status(401).json({ success: false, message: 'Not authorized, no token' });
   }
 };
 
-module.exports = auth;
+const admin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: 'Not authorized as an admin' });
+  }
+};
+
+module.exports = { protect, admin };

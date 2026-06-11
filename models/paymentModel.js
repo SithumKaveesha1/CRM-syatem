@@ -2,7 +2,7 @@ const db = require('../db');
 
 const list = async ({ page, limit }) => {
   const offset = (page - 1) * limit;
-  const [rows] = await db.execute('SELECT * FROM payments LIMIT ? OFFSET ?', [limit, offset]);
+  const [rows] = await db.execute(`SELECT * FROM payments LIMIT ${limit} OFFSET ${offset}`);
   return { rows, page, limit };
 };
 

@@ -1,12 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/auth', require('./auth'));
-router.use('/customers', require('./customers'));
-router.use('/invoices', require('./invoices'));
-router.use('/payments', require('./payments'));
-router.use('/dashboard', require('./dashboard'));
+const authRoutes = require('./authRoutes');
+const customerRoutes = require('./customerRoutes');
+const invoiceRoutes = require('./invoiceRoutes');
+const paymentRoutes = require('./paymentRoutes');
+const dashboardRoutes = require('./dashboardRoutes');
+const settingsRoutes = require('./settingsRoutes');
 
-router.get('/', (req, res) => res.json({ success: true, message: 'API Root' }));
+router.use('/auth', authRoutes);
+router.use('/customers', customerRoutes);
+router.use('/invoices', invoiceRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/dashboard', dashboardRoutes);
+router.use('/settings', settingsRoutes);
 
 module.exports = router;
