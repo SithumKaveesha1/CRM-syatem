@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatLKR } from '../utils/currency'
 
 const Card = ({ title, value }) => (
   <div className="card">
@@ -12,8 +13,8 @@ const DashboardCards = ({ totals }) => {
     <div className="grid">
       <Card title="Total Customers" value={totals.totalCustomers ?? 0} />
       <Card title="Total Invoices" value={totals.totalInvoices ?? 0} />
-      <Card title="Total Revenue" value={`$${(totals.totalRevenue ?? 0).toFixed(2)}`} />
-      <Card title="Outstanding" value={`$${(totals.outstanding ?? 0).toFixed(2)}`} />
+      <Card title="Total Revenue" value={formatLKR(totals.totalRevenue ?? 0)} />
+      <Card title="Outstanding" value={formatLKR(totals.outstanding ?? 0)} />
     </div>
   )
 }

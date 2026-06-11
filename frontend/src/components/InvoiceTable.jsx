@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatLKR } from '../utils/currency'
 
 const InvoiceTable = ({ data = [], onEdit, onDelete }) => {
   return (
@@ -19,7 +20,7 @@ const InvoiceTable = ({ data = [], onEdit, onDelete }) => {
             <td>{idx + 1}</td>
             <td>{i.invoice_no}</td>
             <td>{i.customer_id}</td>
-            <td>${Number(i.total_amount).toFixed(2)}</td>
+            <td>{formatLKR(i.total_amount)}</td>
             <td>{i.status}</td>
             <td>
               <button className="btn ghost" onClick={() => onEdit(i)}>Edit</button>
