@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/authMiddleware');
 
 // Get settings
-router.get('/', protect, async (req, res, next) => {
+router.get('/', protect, admin, async (req, res, next) => {
   try {
     const [settings] = await db.query('SELECT * FROM settings LIMIT 1');
     if (settings.length === 0) {
@@ -19,7 +19,7 @@ router.get('/', protect, async (req, res, next) => {
 });
 
 // Update settings
-router.put('/', protect, async (req, res, next) => {
+router.put('/', protect, admin, async (req, res, next) => {
   try {
     const { company_name, company_address, contact_number, email, currency } = req.body;
     
